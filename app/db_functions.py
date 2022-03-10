@@ -20,7 +20,7 @@ def write_new_measurements(db: Session, data: schemas.sensor_data_ingest):
     record_in_db = db.query(models.sensor_data).filter(and_(
         models.sensor_data.date == new_measurements.date,
         models.sensor_data.sensor_ID == new_measurements.sensor_ID,
-        models.sensor_data.place == new_measurements.sensor_ID
+        models.sensor_data.place == new_measurements.place
     )).all()
 
     if len(record_in_db) > 0:
