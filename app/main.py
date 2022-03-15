@@ -30,7 +30,7 @@ def get_db():
 
 
 @app.get('/get_latest_measurement')
-async def get_latest_measurement(
+def get_latest_measurement(
         sensor_ID: str,
         db: Session = Depends(get_db),
         credentials: HTTPBasicCredentials = Depends(security)
@@ -53,7 +53,7 @@ async def get_latest_measurement(
 
 
 @app.post('/write_measurement')
-async def write_measurement(
+def write_measurement(
         data: schemas.sensor_data_ingest,
         db: Session = Depends(get_db),
         credentials: HTTPBasicCredentials = Depends(security)

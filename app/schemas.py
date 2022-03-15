@@ -14,7 +14,7 @@ class sensor_data_ingest(BaseModel):
     aX: float = 1.0
     aY: float = 1.0
     aZ: float = 1.0
-    processed: bool = False,
+    processed: bool = False
     timezone: str = 'EST'
 
     class Config:
