@@ -2,8 +2,7 @@ from sqlalchemy import desc, and_
 from sqlalchemy.orm import Session
 
 from app import models, schemas
-# import arrow
-# from dateutil import tz
+from datetime import datetime
 
 
 def get_latest_measurement(db: Session, sensor_ID: str):
@@ -14,6 +13,9 @@ def get_latest_measurement(db: Session, sensor_ID: str):
 def write_new_measurements(db: Session, data: schemas.sensor_data_ingest):
     values = data.dict()
     del values["timezone"]
+
+    string_date = values["date"]
+    values["date"] = datetime.fromisoformat(string_date)
 
     new_measurements = models.sensor_data(**values)
 

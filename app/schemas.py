@@ -5,7 +5,7 @@ import datetime
 class sensor_data_ingest(BaseModel):
     place: str
     sensor_ID: str
-    date: datetime.datetime
+    date: str
     pressure: float
     wtemp: float
     notes: str = ""
