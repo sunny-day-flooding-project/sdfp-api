@@ -15,7 +15,7 @@ def write_new_measurements(db: Session, data: schemas.sensor_data_ingest):
     del values["timezone"]
 
     string_date = values["date"]
-    values["date"] = datetime.fromisoformat(string_date)
+    values["date"] = datetime.fromisoformat(string_date).replace(microsecond=0)
 
     new_measurements = models.sensor_data(**values)
 
