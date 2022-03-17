@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# # # Uncomment for working locally to access env vars
+# # Uncomment for working locally to access env vars
 # from app import environment_vars
 # environment_vars.set_env_vars()
 

@@ -34,3 +34,36 @@ def write_new_measurements(db: Session, data: schemas.sensor_data_ingest):
         db.refresh(new_measurements)
 
         return "SUCCESS! Record written to database"
+
+
+def get_water_level(db: Session, min_date: datetime, max_date: datetime, sensor_ID: str):
+    return db.query(models.data_for_display).filter(and_(
+        models.data_for_display.date >= min_date,
+        models.data_for_display.date <= max_date,
+        models.data_for_display.sensor_ID == sensor_ID
+    )).all()
+
+
+def write_survey(db: Session, data: schemas.add_survey):
+    values = data.dict()
+
+    string_date = values["date_surveyed"]
+    values["date_surveyed"] = datetime.strptime(string_date, '%Y-%m-%d')
+
+    new_survey = models.sensor_surveys(**values)
+
+    record_in_db = db.query(models.sensor_surveys).filter(and_(
+        models.sensor_surveys.date_surveyed == new_survey.date_surveyed,
+        models.sensor_surveys.sensor_ID == new_survey.sensor_ID,
+        models.sensor_surveys.place == new_survey.place
+    )).all()
+
+    if len(record_in_db) > 0:
+        return "Record already in database. Measurement not written"
+
+    if len(record_in_db) == 0:
+        db.add(new_survey)
+        db.commit()
+        db.refresh(new_survey)
+
+        return "SUCCESS! Record written to database"
