@@ -10,6 +10,16 @@ def get_latest_measurement(db: Session, sensor_ID: str):
         desc('date')).first()
 
 
+def get_surveys(db: Session, sensor_ID: str):
+    return db.query(models.sensor_surveys).filter(models.sensor_surveys.sensor_ID == sensor_ID).order_by(
+        desc('date_surveyed')).all()
+
+
+def get_all_surveys(db: Session):
+    return db.query(models.sensor_surveys).order_by(
+        desc('date_surveyed')).all()
+
+
 def write_new_measurements(db: Session, data: schemas.sensor_data_ingest):
     values = data.dict()
     del values["timezone"]
@@ -48,7 +58,7 @@ def write_survey(db: Session, data: schemas.add_survey):
     values = data.dict()
 
     string_date = values["date_surveyed"]
-    values["date_surveyed"] = datetime.strptime(string_date, '%Y-%m-%d')
+    values["date_surveyed"] = datetime.strptime(string_date, '%Y%m%d%H%M%S')
 
     new_survey = models.sensor_surveys(**values)
 
