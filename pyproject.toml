@@ -8,6 +8,8 @@ authors = ["Adam Gold <47038242+acgold@users.noreply.github.com>"]
 python = "^3.8"
 fastapi = "^0.77.1"
 SQLAlchemy = "^1.4.36"
+uvicorn = "^0.17.6"
+pydantic = "^1.9.0"
 
 [tool.poetry.dev-dependencies]
 
