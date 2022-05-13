@@ -10,7 +10,6 @@ from fastapi import FastAPI, Depends, HTTPException, status, Query
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
-from typing import Optional
 
 # # Uncomment for working locally to access env vars
 # from app import environment_vars

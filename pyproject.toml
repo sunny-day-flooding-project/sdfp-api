@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "sdfp-api"
+version = "0.1.1"
+description = ""
+authors = ["Adam Gold <47038242+acgold@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = "^0.77.1"
+SQLAlchemy = "^1.4.36"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
