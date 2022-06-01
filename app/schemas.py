@@ -38,6 +38,7 @@ class add_survey(BaseModel):
     wl_url: str = Field(..., example="https://tidesandcurrents.noaa.gov/waterlevels.html?id=8656483")
     notes: str = Field("", example="test")
     wl_types: str = Field(..., example="obs")
+    under_construction: bool = Field(..., example=False)
 
     class Config:
         orm_mode = True

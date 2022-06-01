@@ -63,3 +63,4 @@ class sensor_surveys(database.Base):
     wl_url = Column(String, index=True)
     notes = Column(String, index=True)
     wl_types = Column(String, index=True)
+    under_construction = Column(Boolean, index=True)
