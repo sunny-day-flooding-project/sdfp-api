@@ -8,6 +8,7 @@ class sensor_data_ingest(BaseModel):
     sensor_ID: str = Field(..., example="BF_01")
     date: str = Field(..., example="2022-03-16 10:13:09.148658-04:00")
     pressure: float = Field(..., example = "1000")
+    raw_pressure: float | None
     wtemp: float = Field(..., example = "25")
     notes: str = Field("", example = "test")
     voltage: float = 4.0

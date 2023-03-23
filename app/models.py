@@ -10,6 +10,7 @@ class sensor_data(database.Base):
     sensor_ID = Column(String, primary_key=True, index=True)
     date = Column(DateTime, primary_key=True, index=True)
     pressure = Column(Float, index=True)
+    raw_pressure = Column(Float, index=True)
     voltage = Column(Float, index=True)
     notes = Column(String, index=True)
     seqNum = Column(Float, index=True)
