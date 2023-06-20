@@ -65,3 +65,8 @@ class sensor_surveys(database.Base):
     notes = Column(String, index=True)
     wl_types = Column(String, index=True)
     under_construction = Column(Boolean, index=True)
+    sensor_label = Column(String, index=True)
+    alt_wl_src = Column(String, index=True)
+    alt_wl_id = Column(String, index=True)
+    alt_wl_url = Column(String, index=True)
+    alt_wl_types = Column(String, index=True)

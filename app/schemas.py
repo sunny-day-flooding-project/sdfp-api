@@ -40,6 +40,11 @@ class add_survey(BaseModel):
     notes: str = Field("", example="test")
     wl_types: str = Field(..., example="obs")
     under_construction: bool = Field(..., example=False)
+    sensor_label: str = Field(..., example="Starfish Ln. at Canal Dr.")
+    alt_wl_src: str | None
+    alt_wl_id: str | None
+    alt_wl_url: str | None
+    alt_wl_types: str | None
 
     class Config:
         orm_mode = True
