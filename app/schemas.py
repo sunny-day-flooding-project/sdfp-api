@@ -45,8 +45,8 @@ class add_survey(BaseModel):
     alt_wl_id: str | None
     alt_wl_url: str | None
     alt_wl_types: str | None
-    alt_atm_data_src: str = str | None
-    alt_atm_station_id: str = str | None
+    alt_atm_data_src: str | None
+    alt_atm_station_id: str | None
 
     class Config:
         orm_mode = True
