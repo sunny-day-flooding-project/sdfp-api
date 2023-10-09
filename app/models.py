@@ -70,3 +70,5 @@ class sensor_surveys(database.Base):
     alt_wl_id = Column(String, index=True)
     alt_wl_url = Column(String, index=True)
     alt_wl_types = Column(String, index=True)
+    alt_atm_data_src = Column(String, index=True)
+    alt_atm_station_id = Column(String, index=True)
