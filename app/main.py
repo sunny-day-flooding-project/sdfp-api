@@ -118,11 +118,10 @@ def get_water_level(
 ):
     correct_username = secrets.compare_digest(credentials.username, os.environ.get('username'))
     correct_password = secrets.compare_digest(credentials.password, os.environ.get('password'))
-    # ro_username = secrets.compare_digest(credentials.username, os.environ.get('ro_username'))
-    # ro_password = secrets.compare_digest(credentials.password, os.environ.get('ro_password'))
+    ro_username = secrets.compare_digest(credentials.username, os.environ.get('ro_username'))
+    ro_password = secrets.compare_digest(credentials.password, os.environ.get('ro_password'))
 
-    # if not ((correct_username and correct_password) or (ro_username and ro_password)):
-    if not (correct_username and correct_password):
+    if not ((correct_username and correct_password) or (ro_username and ro_password)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
@@ -174,11 +173,10 @@ def get_surveys(
 ):
     correct_username = secrets.compare_digest(credentials.username, os.environ.get('username'))
     correct_password = secrets.compare_digest(credentials.password, os.environ.get('password'))
-    # ro_username = secrets.compare_digest(credentials.username, os.environ.get('ro_username'))
-    # ro_password = secrets.compare_digest(credentials.username, os.environ.get('ro_password'))
+    ro_username = secrets.compare_digest(credentials.username, os.environ.get('ro_username'))
+    ro_password = secrets.compare_digest(credentials.password, os.environ.get('ro_password'))
 
-    # if not ((correct_username and correct_password) or (ro_username and ro_password)):
-    if not (correct_username and correct_password):
+    if not ((correct_username and correct_password) or (ro_username and ro_password)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
