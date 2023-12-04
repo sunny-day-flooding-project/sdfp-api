@@ -32,9 +32,9 @@ app = FastAPI(
     version="0.1.1",
     # terms_of_service="http://example.com/terms/",
     contact={
-        "name": "Adam Gold",
+        "name": "Ian Hoyt",
         "url": "https://tarheels.live/sunnydayflood/people/",
-        "email": "gold@unc.edu",
+        "email": "ianiac@email.unc.edu",
     },
     license_info={
         "name": "GNU General Public License v3.0",
@@ -118,8 +118,10 @@ def get_water_level(
 ):
     correct_username = secrets.compare_digest(credentials.username, os.environ.get('username'))
     correct_password = secrets.compare_digest(credentials.password, os.environ.get('password'))
+    ro_username = secrets.compare_digest(credentials.username, os.environ.get('ro_username'))
+    ro_password = secrets.compare_digest(credentials.username, os.environ.get('ro_password'))
 
-    if not (correct_username and correct_password):
+    if not ((correct_username and correct_password) or (ro_username and ro_password)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
@@ -171,8 +173,10 @@ def get_surveys(
 ):
     correct_username = secrets.compare_digest(credentials.username, os.environ.get('username'))
     correct_password = secrets.compare_digest(credentials.password, os.environ.get('password'))
+    ro_username = secrets.compare_digest(credentials.username, os.environ.get('ro_username'))
+    ro_password = secrets.compare_digest(credentials.username, os.environ.get('ro_password'))
 
-    if not (correct_username and correct_password):
+    if not ((correct_username and correct_password) or (ro_username and ro_password)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
