@@ -2,7 +2,7 @@ from sqlalchemy import desc, and_
 from sqlalchemy.orm import Session
 
 from app import models, schemas
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 def get_latest_measurement(db: Session, sensor_ID: str):
@@ -43,6 +43,14 @@ def write_new_measurements(db: Session, data: schemas.sensor_data_ingest):
         db.commit()
         db.refresh(new_measurements)
 
+        diff = datetime.now(timezone.utc) - new_measurements.date
+        # Log entry if greater than 24 hours ago
+        if (diff.total_seconds() / 60 > 1440):
+            f = open("/data-api-log/delayed_measurements.txt", "a")
+            header = "Date Added;place;sensor_ID;date"
+            f.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + ";" + str(new_measurements) + "\n")
+            f.close()
+
         return "SUCCESS! Record written to database"
 
 
@@ -75,5 +83,10 @@ def write_survey(db: Session, data: schemas.add_survey):
         db.add(new_survey)
         db.commit()
         db.refresh(new_survey)
+
+        f = open("/data-api-log/surveys_added.txt", "a")
+        header = "Date Added;place;sensor_ID;date_surveyed"
+        f.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + ";" + str(new_survey) + "\n")
+        f.close()
 
         return "SUCCESS! Record written to database"

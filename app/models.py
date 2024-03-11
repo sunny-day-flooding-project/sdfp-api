@@ -20,6 +20,9 @@ class sensor_data(database.Base):
     processed = Column(Boolean, index=True)
     wtemp = Column(Float, index=True)
 
+    def __str__(self):
+        return self.place + ";" + self.sensor_ID + ";" + self.date.strftime("%Y-%m-%d %H:%M:%S")
+
 
 class data_for_display(database.Base):
     __tablename__ = "data_for_display"
@@ -72,3 +75,6 @@ class sensor_surveys(database.Base):
     alt_wl_types = Column(String, index=True)
     alt_atm_data_src = Column(String, index=True)
     alt_atm_station_id = Column(String, index=True)
+
+    def __str__(self):
+        return self.place + ";" + self.sensor_ID + ";" + self.date_surveyed.strftime("%Y-%m-%d %H:%M:%S")
