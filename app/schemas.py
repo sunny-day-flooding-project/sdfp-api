@@ -45,8 +45,8 @@ class add_survey(BaseModel):
     alt_wl_id: str = Field("", example="8656483") 
     alt_wl_url: str = Field("", example="https://tidesandcurrents.noaa.gov/waterlevels.html?id=8656483") 
     alt_wl_types: str = Field("", example="obs") 
-    alt_atm_data_src: str = Field(..., example="NOAA")
-    alt_atm_station_id: str = Field(..., example="8656483")
+    alt_atm_data_src: str = Field("", example="NOAA")
+    alt_atm_station_id: str = Field("", example="8656483")
     reference_elevation: float = Field(..., example=1.0)
     reference_elevation_type: str = Field("", example="drain_bottom") 
 
