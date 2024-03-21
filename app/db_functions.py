@@ -47,7 +47,7 @@ def write_new_measurements(db: Session, data: schemas.sensor_data_ingest):
         # Log entry if greater than 24 hours ago
         if (diff.total_seconds() / 60 > 1440):
             f = open("/data-api-log/delayed_measurements.txt", "a")
-            header = "Date Added;place;sensor_ID;date"
+            header = "date_added;place;sensor_ID;date"
             f.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + ";" + str(new_measurements) + "\n")
             f.close()
 
@@ -85,7 +85,7 @@ def write_survey(db: Session, data: schemas.add_survey):
         db.refresh(new_survey)
 
         f = open("/data-api-log/surveys_added.txt", "a")
-        header = "Date Added;place;sensor_ID;date_surveyed"
+        header = "date_added;place;sensor_ID;date_surveyed"
         f.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + ";" + str(new_survey) + "\n")
         f.close()
 
