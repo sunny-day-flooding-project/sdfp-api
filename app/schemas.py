@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from typing import Dict
 # Need to import List function for wl_types
 import datetime
 
@@ -52,3 +53,12 @@ class add_survey(BaseModel):
 
     class Config:
         orm_mode = True
+
+class ml_camera_data_ingest(BaseModel):
+    device: str = Field(..., example="dev:94deb8230136")
+    when: str = Field(..., example="1711400133")
+    body: Dict = Field(..., example="JSON structure containing floodstatus field")
+
+    class Config:
+        orm_mode = True
+        extra = 'ignore'

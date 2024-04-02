@@ -90,3 +90,27 @@ def write_survey(db: Session, data: schemas.add_survey):
         f.close()
 
         return "SUCCESS! Record written to database"
+
+def get_latest_ml_camera_data(db: Session, device_id: str):
+    return db.query(models.ml_camera_data).filter(models.ml_camera_data.device_id == device_id).order_by(
+        desc('date')).first()
+
+def write_new_ml_camera_data(db: Session, data: schemas.ml_camera_data_ingest):
+    if ('floodstatus' not in data.body):
+        return "Error: floodstatus missing from body field"
+    
+    when = datetime.fromtimestamp(int(data.when))
+    new_data = models.ml_camera_data(device_id=data.device, date=when, flood_status=data.body['floodstatus'])
+
+    record_in_db = db.query(models.ml_camera_data).filter(and_(
+        models.ml_camera_data.date == new_data.date,
+        models.ml_camera_data.device_id == new_data.device_id,
+    )).all()
+
+    if len(record_in_db) > 0:
+        return "Record already in database. Measurement not written"
+    
+    db.add(new_data)
+    db.commit()
+
+    return "SUCCESS! Record written to database"

@@ -192,3 +192,51 @@ def get_surveys(
         db=db,
         sensor_ID=sensor_ID
     )
+
+@app.post('/write_ml_camera_data')
+def write_ml_camera_data(
+        data: schemas.ml_camera_data_ingest,
+        db: Session = Depends(get_db),
+        credentials: HTTPBasicCredentials = Depends(security)
+):
+    
+    correct_username = secrets.compare_digest(credentials.username, os.environ.get('username'))
+    correct_password = secrets.compare_digest(credentials.password, os.environ.get('password'))
+
+    if not (correct_username and correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    
+    response = db_functions.write_new_ml_camera_data(
+        db=db,
+        data=data
+    )
+
+    return {
+        response
+    }
+
+@app.get('/get_latest_ml_camera_data')
+def get_latest_ml_camera_data(
+        device_id: str = Query(..., description="Example: dev:94deb8230136"),
+        db: Session = Depends(get_db),
+        credentials: HTTPBasicCredentials = Depends(security)
+):
+    correct_username = secrets.compare_digest(credentials.username, os.environ.get('username'))
+    correct_password = secrets.compare_digest(credentials.password, os.environ.get('password'))
+
+    if not (correct_username and correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+    latest_data = db_functions.get_latest_ml_camera_data(db=db, device_id=device_id)
+
+    return {
+        latest_data
+    }

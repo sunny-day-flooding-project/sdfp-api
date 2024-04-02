@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, String, Float, DateTime
+from sqlalchemy import Boolean, Column, String, Float, DateTime, Integer
 
 from app import database
 
@@ -80,3 +80,10 @@ class sensor_surveys(database.Base):
 
     def __str__(self):
         return self.place + ";" + self.sensor_ID + ";" + self.date_surveyed.strftime("%Y-%m-%d %H:%M:%S")
+
+class ml_camera_data(database.Base):
+    __tablename__ = "ml_camera_data"
+
+    device_id = Column(String, primary_key=True, index=True)
+    date = Column(DateTime, primary_key=True, index=True)
+    flood_status = Column(Integer, index=True)
