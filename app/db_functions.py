@@ -99,8 +99,12 @@ def write_new_ml_camera_data(db: Session, data: schemas.ml_camera_data_ingest):
     if ('floodstatus' not in data.body):
         return "Error: floodstatus missing from body field"
     
+    if ('temperature' not in data.body):
+        print("Temperature missing from request")
+        return "Error: temperature missing from body field"
+    
     when = datetime.fromtimestamp(int(data.when))
-    new_data = models.ml_camera_data(device_id=data.device, date=when, flood_status=data.body['floodstatus'])
+    new_data = models.ml_camera_data(device_id=data.device, date=when, flood_status=data.body['floodstatus'], temperature=data.body['temperature'])
 
     record_in_db = db.query(models.ml_camera_data).filter(and_(
         models.ml_camera_data.date == new_data.date,

@@ -87,3 +87,4 @@ class ml_camera_data(database.Base):
     device_id = Column(String, primary_key=True, index=True)
     date = Column(DateTime, primary_key=True, index=True)
     flood_status = Column(Integer, index=True)
+    temperature = Column(Float, index=True)
