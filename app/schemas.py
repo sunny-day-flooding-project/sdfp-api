@@ -55,9 +55,9 @@ class add_survey(BaseModel):
         orm_mode = True
 
 class ml_camera_data_ingest(BaseModel):
-    device: str = Field(..., example="dev:94deb8230136")
+    file: str = Field(..., example="2037335832365003001c00c8#camera002.qo")
     when: str = Field(..., example="1711400133")
-    body: Dict = Field(..., example="JSON structure containing floodstatus field")
+    body: Dict = Field(..., example="JSON structure containing floodstatus and temperature fields")
 
     class Config:
         orm_mode = True

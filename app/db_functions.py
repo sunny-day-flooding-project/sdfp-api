@@ -1,4 +1,4 @@
-from sqlalchemy import desc, and_
+from sqlalchemy import asc, desc, and_
 from sqlalchemy.orm import Session
 
 from app import models, schemas
@@ -91,9 +91,16 @@ def write_survey(db: Session, data: schemas.add_survey):
 
         return "SUCCESS! Record written to database"
 
-def get_latest_ml_camera_data(db: Session, device_id: str):
-    return db.query(models.ml_camera_data).filter(models.ml_camera_data.device_id == device_id).order_by(
+def get_latest_ml_camera_data(db: Session, file_id: str):
+    return db.query(models.ml_camera_data).filter(models.ml_camera_data.file_id == file_id).order_by(
         desc('date')).first()
+
+def get_ml_camera_data(db: Session, min_date: datetime, max_date: datetime, file_id: str):
+    return db.query(models.ml_camera_data).filter(and_(
+        models.ml_camera_data.file_id == file_id,
+        models.ml_camera_data.date >= min_date,
+        models.ml_camera_data.date <= max_date
+    )).order_by(asc('date')).all()
 
 def write_new_ml_camera_data(db: Session, data: schemas.ml_camera_data_ingest):
     if ('floodstatus' not in data.body):
@@ -104,11 +111,11 @@ def write_new_ml_camera_data(db: Session, data: schemas.ml_camera_data_ingest):
         return "Error: temperature missing from body field"
     
     when = datetime.fromtimestamp(int(data.when))
-    new_data = models.ml_camera_data(device_id=data.device, date=when, flood_status=data.body['floodstatus'], temperature=data.body['temperature'])
+    new_data = models.ml_camera_data(file_id=data.file, date=when, flood_status=data.body['floodstatus'], temperature=data.body['temperature'])
 
     record_in_db = db.query(models.ml_camera_data).filter(and_(
         models.ml_camera_data.date == new_data.date,
-        models.ml_camera_data.device_id == new_data.device_id,
+        models.ml_camera_data.file_id == new_data.file_id,
     )).all()
 
     if len(record_in_db) > 0:

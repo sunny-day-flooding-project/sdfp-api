@@ -221,7 +221,7 @@ def write_ml_camera_data(
 
 @app.get('/get_latest_ml_camera_data')
 def get_latest_ml_camera_data(
-        device_id: str = Query(..., description="Example: dev:94deb8230136"),
+        file_id: str = Query(..., description="Example: 2037335832365003001c00c8#camera002.qo"),
         db: Session = Depends(get_db),
         credentials: HTTPBasicCredentials = Depends(security)
 ):
@@ -235,8 +235,42 @@ def get_latest_ml_camera_data(
             headers={"WWW-Authenticate": "Basic"},
         )
 
-    latest_data = db_functions.get_latest_ml_camera_data(db=db, device_id=device_id)
+    latest_data = db_functions.get_latest_ml_camera_data(db=db, file_id=file_id)
 
     return {
         latest_data
     }
+
+@app.get('/get_ml_camera_data')
+def get_ml_camera_data(
+        file_id: str = Query(..., description="Example: 2037335832365003001c00c8#camera002.qo"),
+        min_date: str = Query(..., description="Example: 2022-01-01. Date format is '%Y-%m-%d'"),
+        max_date: str = Query(..., description="Example: 2022-01-03. Date format is '%Y-%m-%d'"),
+        db: Session = Depends(get_db),
+        credentials: HTTPBasicCredentials = Depends(security)
+):
+    correct_username = secrets.compare_digest(credentials.username, os.environ.get('username'))
+    correct_password = secrets.compare_digest(credentials.password, os.environ.get('password'))
+
+    if not ((correct_username and correct_password)):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+    parsed_min_date = datetime.strptime(min_date, '%Y-%m-%d')
+    parsed_max_date = datetime.strptime(max_date, '%Y-%m-%d')
+
+    if(parsed_max_date < parsed_min_date):
+        raise HTTPException(status_code=400, detail="Max date is before Min date2")
+
+    if((parsed_max_date - parsed_min_date) > timedelta(days=7)):
+        raise HTTPException(status_code=400, detail="Date range is greater than 7 days. Please decrease date range to seven days or less.")
+    
+    return db_functions.get_ml_camera_data(
+        db=db,
+        min_date=parsed_min_date,
+        max_date=parsed_max_date,
+        file_id=file_id
+    )
