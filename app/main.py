@@ -120,7 +120,7 @@ def get_water_level(
     correct_password = secrets.compare_digest(credentials.password, os.environ.get('password'))
     ro_username = secrets.compare_digest(credentials.username, os.environ.get('ro_username'))
     ro_password = secrets.compare_digest(credentials.password, os.environ.get('ro_password'))
-    ro_username2 = secrets.compare_digest(credentials.username, os.environ.get('ro_username2))
+    ro_username2 = secrets.compare_digest(credentials.username, os.environ.get('ro_username2'))
     ro_password2 = secrets.compare_digest(credentials.password, os.environ.get('ro_password2'))
 
     if not ((correct_username and correct_password) or (ro_username and ro_password) or (ro_username2 and ro_password2)):
