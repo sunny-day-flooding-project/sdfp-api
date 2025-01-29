@@ -88,3 +88,12 @@ class ml_camera_data(database.Base):
     date = Column(DateTime, primary_key=True, index=True)
     flood_status = Column(Integer, index=True)
     temperature = Column(Float, index=True)
+
+class api_data(database.Base):
+    __tablename__ = "api_data"
+
+    id = Column(String, primary_key=True, index=True)
+    type = Column(String, primary_key=True, index=True)
+    api_name = Column(String, primary_key=True, index=True)
+    date = Column(DateTime, primary_key=True, index=True)
+    value = Column(Float, index=True)

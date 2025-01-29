@@ -177,13 +177,17 @@ def get_surveys(
     correct_password = secrets.compare_digest(credentials.password, os.environ.get('password'))
     ro_username = secrets.compare_digest(credentials.username, os.environ.get('ro_username'))
     ro_password = secrets.compare_digest(credentials.password, os.environ.get('ro_password'))
+    ro_username2 = secrets.compare_digest(credentials.username, os.environ.get('ro_username2'))
+    ro_password2 = secrets.compare_digest(credentials.password, os.environ.get('ro_password2'))
 
-    if not ((correct_username and correct_password) or (ro_username and ro_password)):
+    if not ((correct_username and correct_password) or (ro_username and ro_password) or (ro_username2 and ro_password2)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Basic"},
         )
+    
+    sensor_ID = sensor_ID.strip()
 
     if sensor_ID == "all":
         return db_functions.get_all_surveys(
@@ -265,7 +269,7 @@ def get_ml_camera_data(
     parsed_max_date = datetime.strptime(max_date, '%Y-%m-%d')
 
     if(parsed_max_date < parsed_min_date):
-        raise HTTPException(status_code=400, detail="Max date is before Min date2")
+        raise HTTPException(status_code=400, detail="Max date is before Min date")
 
     if((parsed_max_date - parsed_min_date) > timedelta(days=7)):
         raise HTTPException(status_code=400, detail="Date range is greater than 7 days. Please decrease date range to seven days or less.")
@@ -275,4 +279,46 @@ def get_ml_camera_data(
         min_date=parsed_min_date,
         max_date=parsed_max_date,
         file_id=file_id
+    )
+
+@app.get('/get_api_data')
+def get_api_data(
+        id: str = Query(..., description="Example: 8656483"),
+        api_name: str = Query(..., description="Example: NOAA"),
+        type: str = Query(..., description="Example: water_level"),
+        min_date: str = Query(..., description="Example: 2022-01-01. Date format is '%Y-%m-%d'"),
+        max_date: str = Query(..., description="Example: 2022-01-03. Date format is '%Y-%m-%d'"),
+        db: Session = Depends(get_db),
+        credentials: HTTPBasicCredentials = Depends(security)
+):
+    correct_username = secrets.compare_digest(credentials.username, os.environ.get('username'))
+    correct_password = secrets.compare_digest(credentials.password, os.environ.get('password'))
+    ro_username = secrets.compare_digest(credentials.username, os.environ.get('ro_username'))
+    ro_password = secrets.compare_digest(credentials.password, os.environ.get('ro_password'))
+    ro_username2 = secrets.compare_digest(credentials.username, os.environ.get('ro_username2'))
+    ro_password2 = secrets.compare_digest(credentials.password, os.environ.get('ro_password2'))
+
+    if not ((correct_username and correct_password) or (ro_username and ro_password) or (ro_username2 and ro_password2)):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+    parsed_min_date = datetime.strptime(min_date, '%Y-%m-%d')
+    parsed_max_date = datetime.strptime(max_date, '%Y-%m-%d')
+
+    if(parsed_max_date < parsed_min_date):
+        raise HTTPException(status_code=400, detail="Max date is before Min date")
+
+    if((parsed_max_date - parsed_min_date) > timedelta(days=7)):
+        raise HTTPException(status_code=400, detail="Date range is greater than 7 days. Please decrease date range to seven days or less.")
+
+    return db_functions.get_api_data(
+        db=db,
+        min_date=parsed_min_date,
+        max_date=parsed_max_date,
+        id=id,
+        type=type,
+        api_name=api_name,
     )

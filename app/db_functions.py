@@ -19,6 +19,14 @@ def get_all_surveys(db: Session):
     return db.query(models.sensor_surveys).order_by(
         desc('date_surveyed')).all()
 
+def get_api_data(db: Session, id: str, api_name: str, type: str, min_date: datetime, max_date: datetime):
+    return db.query(models.api_data).filter(and_(
+        models.api_data.date >= min_date,
+        models.api_data.date <= max_date,
+        models.api_data.id == id,
+        models.api_data.api_name == api_name,
+        models.api_data.type == type,
+    )).all()
 
 def write_new_measurements(db: Session, data: schemas.sensor_data_ingest):
     values = data.dict()
@@ -69,6 +77,8 @@ def write_survey(db: Session, data: schemas.add_survey):
     values["date_surveyed"] = datetime.strptime(string_date, '%Y%m%d%H%M%S')
 
     new_survey = models.sensor_surveys(**values)
+    new_survey.sensor_ID = new_survey.sensor_ID.strip()
+    new_survey.place = new_survey.place.strip()
 
     record_in_db = db.query(models.sensor_surveys).filter(and_(
         models.sensor_surveys.date_surveyed == new_survey.date_surveyed,
