@@ -311,8 +311,8 @@ def get_api_data(
     if(parsed_max_date < parsed_min_date):
         raise HTTPException(status_code=400, detail="Max date is before Min date")
 
-    if((parsed_max_date - parsed_min_date) > timedelta(days=7)):
-        raise HTTPException(status_code=400, detail="Date range is greater than 7 days. Please decrease date range to seven days or less.")
+    if((parsed_max_date - parsed_min_date) > timedelta(days=30)):
+        raise HTTPException(status_code=400, detail="Date range is greater than 30 days. Please decrease date range to seven days or less.")
 
     return db_functions.get_api_data(
         db=db,
