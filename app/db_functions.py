@@ -84,6 +84,7 @@ def get_water_level(db: Session, min_date: datetime, max_date: datetime, sensor_
                 row.sensor_elevation - nan_threshold < row.sensor_water_level_adj < row.sensor_elevation + nan_threshold
             ):
                 row.sensor_water_level_adj = None  # set to None instead of np.nan for compatibility
+                row.road_water_level_adj = None    # set to None instead of np.nan for compatibility
     
     return qresults
 
