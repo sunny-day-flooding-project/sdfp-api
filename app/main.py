@@ -107,12 +107,12 @@ def write_measurement(
         response
     }
 
-
 @app.get('/get_water_level')
 def get_water_level(
         min_date: str = Query(..., description="Example: 2022-01-01. Date format is '%Y-%m-%d'"),
         max_date: str = Query(..., description="Example: 2022-01-03. Date format is '%Y-%m-%d'"),
         sensor_ID: str = Query(..., description="Example: BF_01"),
+        mode: db_functions.DataMode = Query(db_functions.DataMode.unmasked, description="Optional: 'unmasked' or 'masked'"),
         db: Session = Depends(get_db),
         credentials: HTTPBasicCredentials = Depends(security)
 ):
@@ -143,7 +143,8 @@ def get_water_level(
         db=db,
         min_date=parsed_min_date,
         max_date=parsed_max_date,
-        sensor_ID=sensor_ID
+        sensor_ID=sensor_ID,
+        mode=mode
     )
 
 @app.post('/write_survey')

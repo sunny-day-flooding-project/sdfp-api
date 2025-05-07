@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app import models, schemas
 from datetime import datetime, timezone
-
+from enum import Enum
 
 def get_latest_measurement(db: Session, sensor_ID: str):
     return db.query(models.sensor_data).filter(models.sensor_data.sensor_ID == sensor_ID).order_by(
@@ -62,12 +62,30 @@ def write_new_measurements(db: Session, data: schemas.sensor_data_ingest):
         return "SUCCESS! Record written to database"
 
 
-def get_water_level(db: Session, min_date: datetime, max_date: datetime, sensor_ID: str):
-    return db.query(models.data_for_display).filter(and_(
+# Define the enum for allowed values
+class DataMode(str, Enum):
+    unmasked = "unmasked"
+    masked = "masked"
+
+def get_water_level(db: Session, min_date: datetime, max_date: datetime, sensor_ID: str, mode: str):
+    nan_threshold = 1 / 6
+    
+    qresults = db.query(models.data_for_display).filter(and_(
         models.data_for_display.date >= min_date,
         models.data_for_display.date <= max_date,
         models.data_for_display.sensor_ID == sensor_ID
     )).all()
+
+    if mode == DataMode.masked:
+        for row in qresults:
+            if (
+                row.sensor_water_level_adj is not None and
+                row.sensor_elevation is not None and
+                row.sensor_elevation - nan_threshold < row.sensor_water_level_adj < row.sensor_elevation + nan_threshold
+            ):
+                row.sensor_water_level_adj = None  # set to None instead of np.nan for compatibility
+    
+    return qresults
 
 
 def write_survey(db: Session, data: schemas.add_survey):
